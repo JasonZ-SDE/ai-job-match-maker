@@ -41,6 +41,7 @@ htmlcov/
 .nox/
 .pytest_cache/
 .scrapped_data/
+.storage_state.json
 
 # Jupyter
 .ipynb_checkpoints/

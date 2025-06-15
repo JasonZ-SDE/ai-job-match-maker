@@ -14,7 +14,7 @@ LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 NUMBER_OF_JOBS_TO_BE_SCRAPPED = 20
 
-STORAGE_PATH = Path(__file__).parent / "storage_state.json"
+STORAGE_PATH = Path(__file__).parent.parent / ".storage_state.json"
 SEARCH_TERM = "Software Engineer"
 
 class Job(BaseModel):
