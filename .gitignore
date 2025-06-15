@@ -1,0 +1,48 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment directories (if you have any local venvs, though uv prefers .venv)
+.venv/
+venv/
+env/
+
+# Dependency lock files (keep pyproject.lock if you want it tracked)
+# Uncomment the next line if you don't want the lock file in version control
+# pyproject.lock
+
+# uv cache (if you want to exclude uv’s internal cache, though uv caches in XDG dirs or ~/.cache by default)
+.uv-cache/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# IDEs / editors
+.vscode/
+.idea/
+*.swp
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test output
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+.scrapped_data/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
