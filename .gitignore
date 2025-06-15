@@ -5,6 +5,7 @@ __pycache__/
 *.pyd
 
 # Virtual environment directories (if you have any local venvs, though uv prefers .venv)
+.env
 .venv/
 venv/
 env/
