@@ -12,7 +12,7 @@ from datetime import datetime
 load_dotenv()
 LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
-NUMBER_OF_JOBS_TO_BE_SCRAPPED = 20
+NUMBER_OF_JOBS_TO_BE_SCRAPPED = 500
 
 STORAGE_PATH = Path(__file__).parent.parent / ".storage_state.json"
 SEARCH_TERM = "Software Engineer"
@@ -88,6 +88,7 @@ async def collect_job_ids(page: Page):
     print(f"✅ Collected {len(job_ids)} job IDs")
     return job_ids
 
+
 async def save_job_details(page: Page, jobs: dict[str, Job], job_ids: List[str]) -> None:
     for job_id in job_ids:
         if job_id in jobs:
@@ -126,8 +127,8 @@ async def save_job_details(page: Page, jobs: dict[str, Job], job_ids: List[str])
 
         try:
             job_tags_elms = await page.locator(
-                "button.job-details-preferences-and-skills div.job-details-preferences-and-skills__pill span.ui-label"
-            ).all_inner_texts()
+                '.job-details-jobs-unified-top-card__job-insight span[dir="ltr"]'
+                ).all_inner_texts()
             job_tags = [tag.strip() for tag in job_tags_elms if tag.strip()]
         except:
             job_tags = []
@@ -193,7 +194,6 @@ async def save_job_details(page: Page, jobs: dict[str, Job], job_ids: List[str])
             break
 
 
-
 def save_jobs_to_csv(jobs: dict[str, Job], file_path: str = None):
     # Create the .scrapped_data directory if it doesn't exist
     output_dir = os.path.join(os.getcwd(), ".scrapped_data")
@@ -237,7 +237,7 @@ def save_jobs_to_csv(jobs: dict[str, Job], file_path: str = None):
 async def main():
     async with async_playwright() as p:
         # Init page loading
-        browser = await p.chromium.launch(headless=False)
+        browser = await p.chromium.launch(headless=True)
 
         if STORAGE_PATH.exists():
             context = await browser.new_context(storage_state=str(STORAGE_PATH))
@@ -272,6 +272,7 @@ async def main():
             
 
         save_jobs_to_csv(jobs)
+        
 
 if __name__ == "__main__":
     asyncio.run(main())
