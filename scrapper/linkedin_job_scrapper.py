@@ -12,7 +12,7 @@ from datetime import datetime
 load_dotenv()
 LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
-NUMBER_OF_JOBS_TO_BE_SCRAPPED = 500
+NUMBER_OF_JOBS_TO_BE_SCRAPPED = 300
 
 STORAGE_PATH = Path(__file__).parent.parent / ".storage_state.json"
 SEARCH_TERM = "Software Engineer"
@@ -145,18 +145,28 @@ async def save_job_details(page: Page, jobs: dict[str, Job], job_ids: List[str])
                     print(f"⚠️ Skipping Easy Apply job: {title} at {company}")
                     continue
                 else:
-                    async with page.context.expect_page() as popup_info:
-                        await apply_button.click()
-                    new_page = await popup_info.value
-                    await new_page.wait_for_load_state('domcontentloaded')
+                    try:
+                        async with page.context.expect_page(timeout=3000) as popup_info:
+                            await apply_button.click()
+                        new_page = await popup_info.value
+                        await new_page.wait_for_load_state('domcontentloaded')
+                    except:
+                        async with page.context.expect_page(timeout=3000) as popup_info2:
+                            continue_button = page.locator("button", has_text="Continue")
+                            if continue_button.is_visible():
+                                await continue_button.click()
+                        new_page = await popup_info2.value
+                        await new_page.wait_for_load_state('domcontentloaded')
 
                     apply_url = new_page.url
                     print(f"🔹 Captured apply URL: {apply_url}")
 
-                    # Optionally close popup
+                    await new_page.wait_for_timeout(random.randint(1000, 2000))
                     await new_page.close()
         except Exception as e:
             print(f"⚠️ Apply button error: {e}")
+            await page.reload()
+            continue
 
         # Extract job description
         try:

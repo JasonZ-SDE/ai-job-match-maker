@@ -2,8 +2,7 @@ import argparse
 from pathlib import Path
 import pandas as pd
 from sqlalchemy import create_engine, Column, Text, ARRAY
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.dialects.postgresql import insert
 from dotenv import load_dotenv
 import os
