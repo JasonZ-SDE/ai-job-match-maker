@@ -10,3 +10,9 @@ python ./scrapper/linkedin_job_scrapper.py   # Scrap jobs from linkedIN
 python ./data_loader/load_jobs.py  {CSV_FILENAME}    # Load scrapped jobs into the Postgres DB
 streamlit run jobs_app.py    # View all the jobs in the Postgres DB
 ```
+
+# Access to n8n UI:
+
+```
+localhost:3000
+```
