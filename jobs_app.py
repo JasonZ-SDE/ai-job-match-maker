@@ -28,7 +28,8 @@ def load_jobs(offset, limit):
     cur.execute("""
         SELECT job_id, title, company, job_info, job_tags, job_description, linkedin_url, apply_url
         FROM job
-        ORDER BY job_id
+        WHERE not_interested = FALSE
+        ORDER BY job_id DESC
         OFFSET %s LIMIT %s
     """, (offset, limit))
     rows = cur.fetchall()
@@ -36,6 +37,18 @@ def load_jobs(offset, limit):
     cur.close()
     conn.close()
     return pd.DataFrame(rows, columns=colnames)
+
+def mark_not_interested(job_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE job
+        SET not_interested = TRUE
+        WHERE job_id = %s
+    """, (job_id,))
+    conn.commit()
+    cur.close()
+    conn.close()
 
 def show_jobs(jobs_df):
     cols = st.columns(3)
@@ -56,8 +69,32 @@ def show_jobs(jobs_df):
                 """,
                 unsafe_allow_html=True
             )
-            with st.expander("Job Description"):
-                st.write(row['job_description'])
+
+            desc_key = f"show_desc_{row['job_id']}"
+
+            if desc_key not in st.session_state:
+                st.session_state[desc_key] = False
+
+            if not st.session_state[desc_key]:
+                if st.button(f"Show Description 📝 {row['job_id']}", key=f"show_{row['job_id']}"):
+                    st.session_state[desc_key] = True
+                    st.rerun()
+            else:
+                st.markdown(
+                    f"""
+                    <div style="border: 1px solid #ddd; padding: 4px; margin-top: 4px;">
+                        {row['job_description']}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+                if st.button(f"Close Description ❌ {row['job_id']}", key=f"close_{row['job_id']}"):
+                    st.session_state[desc_key] = False
+                    st.rerun()
+
+            if st.button(f"Not Interested 🚫 {row['job_id']}", key=f"notint_{row['job_id']}"):
+                mark_not_interested(row['job_id'])
+                st.rerun()
 
 def main():
     st.set_page_config(page_title="Job Listings", layout="wide")
