@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 
 # Load .env
-load_dotenv()
+load_dotenv(override=True)
 
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
@@ -22,14 +22,20 @@ def get_connection():
         password=DB_PASSWORD
     )
 
-def load_jobs(offset, limit):
+def load_jobs(offset, limit, sort_by_score=False, min_score=None):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("""
-        SELECT job_id, title, company, job_info, job_tags, job_description, linkedin_url, apply_url
+    
+    # Build dynamic query based on filters
+    order_clause = "ORDER BY match_score DESC, job_id DESC" if sort_by_score else "ORDER BY job_id DESC"
+    score_filter = f"AND match_score >= {min_score}" if min_score is not None else ""
+    
+    cur.execute(f"""
+        SELECT job_id, title, company, job_info, job_tags, job_description, 
+               linkedin_url, apply_url, match_score, match_reasoning
         FROM job
-        WHERE not_interested = FALSE
-        ORDER BY job_id DESC
+        WHERE not_interested = FALSE {score_filter}
+        {order_clause}
         OFFSET %s LIMIT %s
     """, (offset, limit))
     rows = cur.fetchall()
@@ -50,16 +56,37 @@ def mark_not_interested(job_id):
     cur.close()
     conn.close()
 
+def get_score_color(score):
+    """Get color for match score display."""
+    if score is None:
+        return "#666"
+    elif score >= 8:
+        return "#28a745"  # Green
+    elif score >= 6:
+        return "#ffc107"  # Yellow
+    elif score >= 4:
+        return "#fd7e14"  # Orange
+    else:
+        return "#dc3545"  # Red
+
 def show_jobs(jobs_df):
     cols = st.columns(3)
 
     for idx, row in jobs_df.iterrows():
         col = cols[idx % 3]
         with col.container():
+            # Prepare match score display
+            score = row.get('match_score')
+            score_display = f"🎯 {score}/10" if score is not None else "⚪ Not scored"
+            score_color = get_score_color(score)
+            
             st.markdown(
                 f"""
-                <div style='border: 1px solid #ddd; border-radius: 6px; padding: 8px; margin: 4px; height: 220px; overflow: hidden;'>
-                    <h5 style='margin-bottom: 4px;'>{row['title']}</h5>
+                <div style='border: 1px solid #ddd; border-radius: 6px; padding: 8px; margin: 4px; height: 250px; overflow: hidden;'>
+                    <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;'>
+                        <h5 style='margin: 0; flex-grow: 1;'>{row['title']}</h5>
+                        <span style='color: {score_color}; font-weight: bold; font-size: 12px;'>{score_display}</span>
+                    </div>
                     <p style='margin: 0; font-size: 12px;'><strong>{row['company']}</strong></p>
                     <p style='margin: 0; font-size: 11px; color: grey;'>{row['job_info']}</p>
                     <p style='margin: 0; font-size: 11px;'>Tags: {", ".join(row['job_tags']) if isinstance(row['job_tags'], list) else row['job_tags']}</p>
@@ -92,6 +119,30 @@ def show_jobs(jobs_df):
                     st.session_state[desc_key] = False
                     st.rerun()
 
+            # Show AI reasoning if available
+            if row.get('match_reasoning') and score is not None:
+                reasoning_key = f"show_reasoning_{row['job_id']}"
+                if reasoning_key not in st.session_state:
+                    st.session_state[reasoning_key] = False
+                
+                if not st.session_state[reasoning_key]:
+                    if st.button(f"Show AI Analysis 🤖 {row['job_id']}", key=f"reason_{row['job_id']}"):
+                        st.session_state[reasoning_key] = True
+                        st.rerun()
+                else:
+                    st.markdown(
+                        f"""
+                        <div style="border: 1px solid #007bff; padding: 6px; margin-top: 4px; background-color: #f8f9fa;">
+                            <strong>🤖 AI Analysis (Score: {score}/10):</strong><br>
+                            {row['match_reasoning']}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                    if st.button(f"Hide Analysis ❌ {row['job_id']}", key=f"hide_reason_{row['job_id']}"):
+                        st.session_state[reasoning_key] = False
+                        st.rerun()
+            
             if st.button(f"Not Interested 🚫 {row['job_id']}", key=f"notint_{row['job_id']}"):
                 mark_not_interested(row['job_id'])
                 st.rerun()
@@ -100,11 +151,30 @@ def main():
     st.set_page_config(page_title="Job Listings", layout="wide")
     st.title("Job Listings Dashboard")
 
+    # Sidebar filters
+    st.sidebar.header("Filters")
     limit = st.sidebar.selectbox("Jobs per page", [6, 9, 12, 15], index=1)
     page_num = st.sidebar.number_input("Page number", min_value=1, value=1, step=1)
+    
+    # Scoring filters
+    st.sidebar.subheader("AI Match Scoring")
+    sort_by_score = st.sidebar.checkbox("Sort by match score", value=False)
+    min_score = st.sidebar.slider("Minimum match score", 0, 10, 0, help="Only show jobs with this score or higher")
+    min_score = min_score if min_score > 0 else None
+    
     offset = (page_num - 1) * limit
 
-    jobs_df = load_jobs(offset, limit)
+    jobs_df = load_jobs(offset, limit, sort_by_score=sort_by_score, min_score=min_score)
+    
+    # Display summary stats
+    if not jobs_df.empty and 'match_score' in jobs_df.columns:
+        scored_jobs = jobs_df['match_score'].notna().sum()
+        if scored_jobs > 0:
+            avg_score = jobs_df[jobs_df['match_score'].notna()]['match_score'].mean()
+            st.info(f"📊 Showing {len(jobs_df)} jobs • {scored_jobs} have AI scores • Avg score: {avg_score:.1f}/10")
+        else:
+            st.info(f"📊 Showing {len(jobs_df)} jobs • No AI scores yet")
+    
     if not jobs_df.empty:
         show_jobs(jobs_df)
     else:

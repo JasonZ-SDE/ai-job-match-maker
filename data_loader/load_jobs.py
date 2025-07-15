@@ -1,14 +1,14 @@
 import argparse
 from pathlib import Path
 import pandas as pd
-from sqlalchemy import create_engine, Column, Text, ARRAY
+from sqlalchemy import create_engine, Column, Text, ARRAY, Integer, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.dialects.postgresql import insert
 from dotenv import load_dotenv
 import os
 
 # Load .env
-load_dotenv()
+load_dotenv(override=True)
 
 # DB config from env
 DB_USER = os.getenv('DB_USER')
@@ -30,6 +30,9 @@ class Job(Base):
     job_description = Column(Text)
     linkedin_url = Column(Text)
     apply_url = Column(Text)
+    match_score = Column(Integer)
+    match_reasoning = Column(Text)
+    scored_at = Column(DateTime)
 
 def main(csv_filename):
     csv_path = Path(__file__).resolve().parent.parent / '.scrapped_data' / csv_filename

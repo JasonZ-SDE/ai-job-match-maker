@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import random
 from datetime import datetime
 
-load_dotenv()
+load_dotenv(override=True)
 LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 NUMBER_OF_JOBS_TO_BE_SCRAPPED = 1000
@@ -37,6 +37,7 @@ async def login(context: BrowserContext, page: Page):
 
     await page.click("button[type=submit]")
     await page.wait_for_load_state("domcontentloaded")
+    
     print("✅ Logged in to LinkedIn.")
 
     # Save session cookies
