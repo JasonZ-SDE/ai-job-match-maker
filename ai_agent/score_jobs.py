@@ -20,10 +20,30 @@ load_dotenv(override=True)
 # Add parent directory to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
 
-from user_profile.profile_manager import ProfileManager, UserProfile
+from user_profile.profile_manager import ProfileManager, UserProfile, JobHistory, Project
 from ai_agent.scoring_workflow import ScoringWorkflow, show_scoring_stats
 
 console = Console()
+
+
+def format_professional_experience(experience, max_length=200):
+    """Format professional experience for display, handling both string and JobHistory list formats."""
+    if isinstance(experience, str):
+        # Legacy string format
+        return experience[:max_length] + "..." if len(experience) > max_length else experience
+    elif isinstance(experience, list):
+        # New JobHistory list format
+        formatted_parts = []
+        for job in experience:
+            job_summary = f"• {job.job_title} at {job.company_name} ({job.time})"
+            if job.projects:
+                job_summary += f" - {len(job.projects)} projects"
+            formatted_parts.append(job_summary)
+        
+        full_text = "\n".join(formatted_parts)
+        return full_text[:max_length] + "..." if len(full_text) > max_length else full_text
+    else:
+        return "No professional experience data available"
 
 
 def create_profile_interactive() -> UserProfile:
@@ -45,7 +65,25 @@ def create_profile_interactive() -> UserProfile:
             break
         lines.append(line)
     
-    professional_experience = "\n".join(lines)
+    professional_experience_text = "\n".join(lines)
+    
+    # Convert text input to a basic JobHistory object for compatibility
+    # This is a simplified approach - for full structure, users should use the JSON background file
+    basic_job = JobHistory(
+        company_name="Current/Previous Company",
+        location="Location",
+        job_title=current_title,
+        time="Timeline",
+        projects=[
+            Project(
+                title="General Experience",
+                context="Professional background and experience",
+                action=professional_experience_text,
+                achievement="Various achievements and outcomes"
+            )
+        ]
+    )
+    professional_experience = [basic_job]
     
     console.print("\nEnter your programming languages (comma-separated):")
     languages_input = Prompt.ask("Languages (e.g., Python, JavaScript, Java)")
@@ -130,7 +168,7 @@ def handle_profile_command(args):
         table.add_row("Current Title", profile.current_title)
         table.add_row("Experience", f"{profile.years_experience} years")
         table.add_row("Education", profile.education)
-        table.add_row("Professional Experience", profile.professional_experience[:200] + "..." if len(profile.professional_experience) > 200 else profile.professional_experience)
+        table.add_row("Professional Experience", format_professional_experience(profile.professional_experience))
         table.add_row("Languages", ", ".join(profile.languages))
         table.add_row("Technologies", ", ".join(profile.technologies[:8]) + ("..." if len(profile.technologies) > 8 else ""))
         table.add_row("Infrastructure", ", ".join(profile.infrastructure[:8]) + ("..." if len(profile.infrastructure) > 8 else ""))
