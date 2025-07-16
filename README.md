@@ -55,6 +55,30 @@ python ./ai_agent/score_jobs.py score new
 streamlit run jobs_app.py
 ```
 
+### Common Workflows
+
+#### Complete Profile Update and Re-scoring
+```bash
+# Update profile and reset all scores
+python ./ai_agent/score_jobs.py profile create --from-json
+python ./ai_agent/reset_scores.py --force
+python ./ai_agent/score_jobs.py score all
+```
+
+#### Re-evaluate Poor Matches
+```bash
+# Reset and re-score jobs with scores 0-3
+python ./ai_agent/reset_scores.py --max-score 3 --force
+python ./ai_agent/score_jobs.py score new
+```
+
+#### Fresh Start After New Job Batch
+```bash
+# Check current state, then score new jobs
+python ./ai_agent/reset_scores.py --stats
+python ./ai_agent/score_jobs.py score new --limit 50
+```
+
 ### AI Job Scoring Commands
 
 #### Profile Management
@@ -93,6 +117,27 @@ python ./ai_agent/score_jobs.py score ids --job-ids "123,456,789"
 python ./ai_agent/score_jobs.py stats
 ```
 
+#### Score Management
+```bash
+# View current scoring statistics
+python ./ai_agent/reset_scores.py --stats
+
+# Reset all scores (with confirmation)
+python ./ai_agent/reset_scores.py
+
+# Reset all scores without confirmation
+python ./ai_agent/reset_scores.py --force
+
+# Reset only poor matches (scores 0-3)
+python ./ai_agent/reset_scores.py --max-score 3
+
+# Reset only high scores (scores 8-10)
+python ./ai_agent/reset_scores.py --min-score 8
+
+# Reset specific score range (0-2)
+python ./ai_agent/reset_scores.py --min-score 0 --max-score 2
+```
+
 ### Streamlit Interface Features
 
 - **🎯 AI Match Scores**: Color-coded job scores (0-10)
@@ -103,13 +148,15 @@ python ./ai_agent/score_jobs.py stats
 
 ## AI Scoring System
 
-The AI analyzes jobs across multiple dimensions:
+The AI analyzes jobs with **remote work as the top priority**:
+- **🏠 Remote Work Requirement**: CRITICAL - Non-remote jobs automatically score 0-2
 - **Role Alignment**: Job title/responsibilities match
 - **Skills Match**: Technical skills compatibility
 - **Experience Level**: Appropriate for your experience
-- **Location/Work Style**: Remote/location preferences
 - **Career Growth**: Advancement opportunities
 - **Compensation**: Salary expectations alignment
+
+**Remote Work Filter**: Jobs without explicit remote work options are automatically given poor scores (0-2) regardless of other factors, with clear explanations in the AI reasoning.
 
 ### Score Interpretation
 - **9-10**: 🟢 Excellent matches (apply immediately!)

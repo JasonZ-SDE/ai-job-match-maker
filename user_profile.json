@@ -43,8 +43,13 @@
   "education": "M.S. in Computer and Information Technology - University of Pennsylvania (Jan 2020 - Dec 2021): Built foundation of software engineering, including data structure, algorithm, computer system, operating system, software design, database, machine learning and computer vision. Earned Master's degree while holding full-time job, GPA: 3.97. Ph.D. in Materials Science and Engineering - Virginia Tech (Sep 2012 - May 2015): Research focused on nanomaterial-based semiconductor material for power semiconductor chips. Published 11 peer-reviewed papers, GPA: 3.50.",
   "target_roles": [
     "Software Development Engineer",
-    "Senior Software Engineer"
+    "Senior Software Engineer",
+    "Software Developer",
+    "Full Stack Engineer",
+    "Backend Engineer",
+    "AI Engineer"
   ],
+  "match_goal": "Seeking a mid-level or senior software engineer position where I can leverage my skills and experience to drive high-impact projects while continuing to grow professionally. If job requirements align very well with my skills, entry-level positions are also acceptable.",
   "location_preferences": [
     "Remote"
   ],
@@ -52,6 +57,6 @@
   "work_preferences": [
     "Remote"
   ],
-  "created_at": "2025-07-14 19:25:46.242097",
-  "updated_at": "2025-07-14 19:25:46.243099"
+  "created_at": "2025-07-15 16:19:41.852984",
+  "updated_at": "2025-07-15 16:19:41.856692"
 }

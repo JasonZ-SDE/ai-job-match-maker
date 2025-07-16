@@ -61,27 +61,26 @@ JOB POSTING:
 {job_info}
 
 ANALYSIS INSTRUCTIONS:
-1. CRITICAL LOCATION REQUIREMENT: The candidate strongly prefers REMOTE work only. If the job posting does not explicitly mention "Remote", "Work from home", "WFH", or similar remote work options, this is a MAJOR disqualifying factor.
+1. CRITICAL: The candidate's "Match Goal" is the most important factor in evaluation. The job must align with and support this specific goal. Pay close attention to how well this job opportunity matches the candidate's stated Match Goal.
 
-2. Evaluate the job match across these dimensions:
-   - Location/Work Style: MOST IMPORTANT - Does it explicitly offer remote work? If not remote, this is a critical mismatch.
+2. Evaluate the job match across these key dimensions:
+   - Match Goal Alignment: MOST IMPORTANT - How well does this job align with the candidate's specific Match Goal?
    - Role Alignment: How well does the job title/responsibilities match target roles?
    - Skills Match: How many required/preferred skills does the candidate have?
    - Experience Level: Is the job appropriate for the candidate's experience level?
+   - Location/Work Style: Does the work arrangement (remote/hybrid/onsite) align with preferences?
    - Career Growth: Does it provide advancement opportunities?
    - Compensation Alignment: Does it likely meet salary expectations?
 
 3. SCORING RULES:
-   - If job is NOT explicitly remote: Score 0-2 (Poor match) regardless of other factors
-   - If job IS explicitly remote: Score based on other factors (3-10 possible)
-   - 0-2: Poor match (major misalignments, especially non-remote)
+   - 0-2: Poor match (major misalignments in role, skills, or experience)
    - 3-4: Below average match (some significant gaps)
-   - 5-6: Average match (mixed alignment)
-   - 7-8: Good match (mostly aligned)
-   - 9-10: Excellent match (highly aligned)
+   - 5-6: Average match (mixed alignment, some good fits)
+   - 7-8: Good match (mostly aligned with minor gaps)
+   - 9-10: Excellent match (highly aligned across all dimensions)
 
 4. Provide concise reasoning (MAX 250 words) explaining:
-   - FIRST: Address remote work requirement and impact on score
+   - FIRST: How well this job aligns with the candidate's Match Goal
    - Key strengths of the match
    - Potential concerns or gaps
    - Overall recommendation

@@ -19,6 +19,7 @@ class UserProfile(BaseModel):
     
     # Career Goals
     target_roles: List[str] = Field(description="Desired job titles/roles")
+    match_goal: str = Field(description="Specific goal or intention for job matching (e.g., 'Find a senior role at a fast-growing tech company with ML opportunities')")
     location_preferences: List[str] = Field(description="Preferred work locations/remote preferences")
     salary_range: Optional[str] = Field(default=None, description="Desired salary range")
     work_preferences: List[str] = Field(default_factory=list, description="Work style preferences (remote, hybrid, on-site)")
@@ -112,6 +113,7 @@ class ProfileManager:
                 "Senior Software Engineer", "Staff Software Engineer", 
                 "Technical Lead", "Engineering Manager"
             ],
+            match_goal="Find a senior engineering role at a fast-growing tech company with opportunities to lead technical initiatives and work with cutting-edge technologies",
             location_preferences=["Remote", "San Francisco", "Seattle", "New York"],
             salary_range="$150,000 - $220,000",
             work_preferences=["Remote", "Hybrid"]
@@ -132,6 +134,7 @@ Professional Experience:
 {profile.professional_experience}
 
 Career Goals:
+- Match Goal: {profile.match_goal}
 - Target Roles: {', '.join(profile.target_roles)}
 - Location Preferences: {', '.join(profile.location_preferences)}
 - Salary Range: {profile.salary_range or 'Not specified'}
