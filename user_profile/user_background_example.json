@@ -1,0 +1,75 @@
+{
+  "current_title": "Software Engineer",
+  "years_experience": 5,
+  "education": "B.S. in Computer Science - State University (Sep 2015 - May 2019): Coursework included data structures, algorithms, software engineering, databases, and web development. Graduated with honors, GPA: 3.8.",
+  "languages": [
+    "Python",
+    "JavaScript",
+    "Java",
+    "SQL",
+    "HTML/CSS"
+  ],
+  "technologies": [
+    "React",
+    "Node.js",
+    "Express.js",
+    "PostgreSQL",
+    "MongoDB",
+    "Redis",
+    "REST APIs",
+    "GraphQL"
+  ],
+  "infrastructure": [
+    "Docker",
+    "AWS EC2",
+    "AWS S3",
+    "GitHub Actions",
+    "Jenkins"
+  ],
+  "professional_experience": [
+    {
+      "company_name": "TechCorp Inc.",
+      "location": "San Francisco, CA",
+      "job_title": "Software Engineer",
+      "time": "Jun 2021 - Present",
+      "projects": [
+        {
+          "title": "E-commerce Platform API Development",
+          "context": "The company needed to modernize its legacy e-commerce platform to support mobile applications and third-party integrations. The existing monolithic architecture was causing performance bottlenecks and limiting scalability.",
+          "action": "I designed and developed a new RESTful API using Node.js and Express.js, implementing microservices architecture. I worked closely with the frontend team to ensure seamless integration and collaborated with DevOps to set up automated deployment pipelines using GitHub Actions.",
+          "achievement": "Successfully launched the new API which improved response times by 40% and enabled the mobile app launch. The modular architecture reduced development time for new features by 30%."
+        },
+        {
+          "title": "Database Performance Optimization",
+          "context": "Customer complaints about slow page load times were increasing, and monitoring revealed database queries as the primary bottleneck during peak traffic periods.",
+          "action": "I conducted a comprehensive analysis of database queries, implemented proper indexing strategies, and introduced Redis caching for frequently accessed data. I also optimized N+1 query problems and implemented database connection pooling.",
+          "achievement": "Reduced average page load time by 60% and improved system throughput by 45%. Customer satisfaction scores improved from 3.2 to 4.1 out of 5."
+        }
+      ]
+    },
+    {
+      "company_name": "StartupXYZ",
+      "location": "Austin, TX",
+      "job_title": "Junior Software Developer",
+      "time": "Aug 2019 - May 2021",
+      "projects": [
+        {
+          "title": "Customer Management System",
+          "context": "The startup needed a custom CRM solution to manage their growing customer base and sales pipeline, as existing solutions were too expensive for their budget.",
+          "action": "I built a full-stack web application using React for the frontend and Python Flask for the backend, with PostgreSQL as the database. I implemented features like contact management, sales tracking, and automated email notifications.",
+          "achievement": "The CRM system helped increase sales team productivity by 25% and provided valuable insights that contributed to a 15% increase in conversion rates."
+        }
+      ]
+    }
+  ],
+  "target_roles": [
+    "Software Engineer",
+    "Full Stack Developer",
+    "Backend Engineer",
+    "Frontend Engineer"
+  ],
+  "match_goal": "Looking for a software engineering role where I can contribute to meaningful projects while continuing to learn new technologies and grow my technical skills. Interested in companies that value collaboration and innovation.",
+  "location_preferences": ["Remote", "San Francisco", "Austin"],
+  "salary_range": "$80,000 - $150,000",
+  "work_preferences": ["Remote", "Hybrid"]
+}
